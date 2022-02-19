@@ -3,7 +3,7 @@
 ### Getting Started
 #### Install from requirements.txt
 ```bash
-python3 -v pip -r requirements.txt
+python3 -m pip -r requirements.txt
 ```
 
 ### Create .env file
