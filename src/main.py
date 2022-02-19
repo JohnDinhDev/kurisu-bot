@@ -43,21 +43,3 @@ async def on_message(message: Message):
     await bot.process_commands(message)
 
 bot.run(os.getenv('TOKEN'))
-
-
-#
-#  client = discord.Client(activity=initial_activity)
-#
-#
-#  @client.event
-#  async def on_ready():
-#      print(f"Logged on as {client.user}")
-#
-#
-#  @client.event
-#  async def on_message(message: discord.Message):
-#      print(f"Message from {message.author}: {message.content}")
-#      if "test" in message.content:
-#          await message.reply("<:jeff:650805353776414732>")
-#
-#  client.run(TOKEN)
