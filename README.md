@@ -7,7 +7,7 @@ python3 -v pip -r requirements.txt
 ```
 
 ### Create .env file
-`DISCORD_ID` - your discord id, found by printing out `discord.message.Message.author.id`\
+`DISCORD_ID` - your discord id, found by printing out `discord.Message.author.id`\
 `TOKEN` - The Discord Bot Token\
 `PREFIX` - the prefix for commands
 
