@@ -1,12 +1,17 @@
 import os
 
-from discord import Activity, ActivityType, Message
+from discord import Activity, ActivityType, Message, opus
 from discord.ext import commands
 
 from cogs.Voice import Voice
 from dotenv import load_dotenv
 
 load_dotenv() # load environment variables from .env file
+
+
+# Loads libopus from .env if OPUS_PATH is defined.
+if (opus_path := os.getenv("OPUS_PATH")) is not None:
+    opus.load_opus(opus_path)
 
 INITIAL_ACTIVITY = Activity(
     name="TINA じゃない！😡",
