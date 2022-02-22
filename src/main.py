@@ -1,16 +1,15 @@
-import os
-
+from os import getenv
 from discord import Activity, ActivityType, Message, opus
 from discord.ext import commands
 
 from cogs.Voice import Voice
 from dotenv import load_dotenv
+from speech_recognition import AudioFile, Recognizer, Microphone
 
-load_dotenv() # load environment variables from .env file
-
+load_dotenv()  # load environment variables from .env file
 
 # Loads libopus from .env if OPUS_PATH is defined.
-if (opus_path := os.getenv("OPUS_PATH")) is not None:
+if (opus_path := getenv("OPUS_PATH")) is not None:
     opus.load_opus(opus_path)
 
 INITIAL_ACTIVITY = Activity(
@@ -18,7 +17,7 @@ INITIAL_ACTIVITY = Activity(
     type=ActivityType.playing)
 
 bot = commands.Bot(
-    command_prefix=os.getenv('PREFIX'),
+    command_prefix=getenv('PREFIX'),
     activity=INITIAL_ACTIVITY
 )
 
@@ -47,4 +46,4 @@ async def on_message(message: Message):
 
     await bot.process_commands(message)
 
-bot.run(os.getenv('TOKEN'))
+bot.run(getenv('TOKEN'))
