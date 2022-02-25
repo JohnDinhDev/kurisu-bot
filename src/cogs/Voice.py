@@ -41,11 +41,17 @@ class Voice(commands.Cog):
         if member_id != self.DISCORD_ID:
             return
 
-        # Join voice chat if matching user joins a new voice chat
+        # Join voice chat if matching user joins a new voice chat.
         if after.channel is not None:
+
+            # Disconnect from current voice chat if user moved to a new voice chat.
+            if self.voice_client is not None:
+                await self.voice_client.disconnect()
+
+            # Connects to voice chat user just joined.
             self.voice_client = await after.channel.connect()
 
-        # Disconnect from current voice client if matching user leaves
+        # Disconnect from current voice client if matching user leaves.
         elif self.voice_client is not None:
             await self.voice_client.disconnect()
             self.voice_client = None
