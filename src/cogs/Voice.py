@@ -1,10 +1,10 @@
+import asyncio
 from os import getenv
 from threading import Thread
 
-from discord import FFmpegPCMAudio, VoiceClient
+from discord import AudioSource, FFmpegPCMAudio, VoiceClient
 from discord.ext import commands
 from speech_recognition import Microphone, Recognizer
-import asyncio
 
 
 class Voice(commands.Cog):
@@ -12,6 +12,11 @@ class Voice(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
         self.voice_client: VoiceClient | None = None
+
+        self.recognizer = Recognizer()
+        self.mic = Microphone()
+
+        self.recognizer.energy_threshold = 1500
 
         if (str_id := getenv("DISCORD_ID")) is not None:
             self.DISCORD_ID = int(str_id)
@@ -46,26 +51,41 @@ class Voice(commands.Cog):
             self.voice_client = None
 
     def listen_event(self):
-        while True:
-            recognizer = Recognizer()
-            with Microphone() as mic:
-                recognizer.adjust_for_ambient_noise(mic, duration=0.2)
-                audio = recognizer.listen(mic)
-
+        with self.mic as mic:
+            while True:
+                self.recognizer.adjust_for_ambient_noise(
+                    self.mic, duration=0.5)
+                audio = self.recognizer.listen(mic)
                 try:
-                    text = recognizer.recognize_google(audio, language="ja-JP")
+                    print("trying")
+                    text = self.recognizer.recognize_google(
+                        audio, language="ja-JP")
                     print(text)
-                    if "クリス" in text:
-                        asyncio.run(self.play(None))
+                    if "ティーナ" in text or "ティナ" in text:
+                        audio_source = FFmpegPCMAudio(
+                            source="src/assets/voice/mad-scientist.mp3")
+                        self.play_audio(audio_source)
+                    elif "クリス" == text or "もしもし" in text:
+                        audio_source = FFmpegPCMAudio(
+                            source="src/assets/voice/nani-yo.mp3")
+                        self.play_audio(audio_source)
+                    elif "ツンデレ" in text or "シンデレ" in text:
+                        audio_source = FFmpegPCMAudio(
+                            source="src/assets/voice/dare-ga-tsundere-da.mp3")
+                        self.play_audio(audio_source)
                 except:
-                    pass
+                    print("Could not understand.")
+                finally:
+                    text = ""
 
+    def play_audio(self, audio_source: AudioSource):
+        if self.voice_client is not None:
+            self.voice_client.play(audio_source)
 
-
-    @commands.command()
-    async def play(self, ctx) -> None:
+    @commands.command(name="play")
+    async def play_command(self, ctx) -> None:
         audio_source = FFmpegPCMAudio(
-            source="src/assets/voice/nani-yo.mp3", executable="/Users/dinh/.local/usr/bin/ffmpeg")
+            source="src/assets/voice/nani-yo.mp3")
 
         if self.voice_client is not None:
             self.voice_client.play(audio_source)
